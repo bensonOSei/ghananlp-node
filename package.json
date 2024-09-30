@@ -1,0 +1,40 @@
+{
+  "name": "ghananlp-node",
+  "version": "0.0.1",
+  "description": "A simple GhanaNLP API wrapper written in Typescript",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paakways/ghananlp-node.git"
+  },
+  "keywords": [
+    "GhanaNLP",
+    "NLP",
+    "Translate",
+    "Typescript",
+    "NodeJS"
+  ],
+  "author": "Samuel K. Boateng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paakways/ghananlp-node/issues"
+  },
+  "homepage": "https://github.com/paakways/ghananlp-node#readme",
+  "dependencies": {
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "eslint": "^9.11.1",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0"
+  }
+}
