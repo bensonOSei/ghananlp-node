@@ -1,18 +1,18 @@
-interface TranslationRequest {
+export interface TranslationRequest {
     in: string; // Input string to be translated (max length 1000 characters)
     lang: string; // Language pair code (e.g., 'en-tw' for english to Twi translation)
 }
 
-interface TranslationResponse {
+export interface TranslationResponse {
     translatedText: string; // The translated text
 }
 
-interface Language {
+export interface Language {
     code: string; // Language code (e.g., 'en')
     name: string; // Full language name (e.g., 'English')
 }
 
-interface ErrorResponse {
+export interface ErrorResponse {
     type: string;
     message: string;
 }

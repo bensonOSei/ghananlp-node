@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from './interface'
 
 export class GhanaNLP {
     private apiKey: string;
