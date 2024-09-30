@@ -1,5 +1,5 @@
 {
-  "name": "ghananlp-node",
+  "name": "@paakways/ghananlp-node",
   "version": "0.0.1",
   "description": "A simple GhanaNLP API wrapper written in Typescript",
   "main": "dist/index.js",
