@@ -50,15 +50,14 @@ npm install --save-dev @types/axios
 To translate text from one language to another, use the `translate` method. You need to specify the input text and the language pair code (in the format `from-to`, e.g., `en-tw` for English to Twi).
 
 ```typescript
-const translationRequest = { in: 'Hello World', lang: 'en-tw' };
-
-api.translate(translationRequest)
-    .then((response) => {
+    const translationRequest = { in: 'Hello World', lang: 'en-tw' };
+    try {
+        const response = await api.translate(translationRequest)
         console.log('Translated text:', response.translatedText);
-    })
-    .catch((error) => {
+    }
+    catch(error) {
         console.error('Translation error:', error.message);
-    });
+    }
 ```
 
 ### Get Supported Languages
@@ -66,13 +65,13 @@ api.translate(translationRequest)
 You can retrieve a list of all supported languages with their language codes:
 
 ```typescript
-api.getLanguages()
-    .then((languages) => {
+    try {
+        const languages = await api.getLanguages()
         console.log('Supported languages:', languages);
-    })
-    .catch((error) => {
+    }
+    catch(error) {
         console.error('Error fetching languages:', error.message);
-    });
+    }
 ```
 
 ## Error Handling
@@ -82,10 +81,12 @@ The library provides error handling to help diagnose issues with the API request
 Example of catching an error:
 
 ```typescript
-api.translate({ in: 'Hello', lang: 'invalid-code' })
-    .catch((error) => {
+    try {
+        const response = await api.translate({ in: 'Hello', lang: 'invalid-code' })
+    }
+    catch(error) {
         console.error('Error:', error.message); // Outputs detailed error message
-    });
+    }
 ```
 
 ## API Reference
