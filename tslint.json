@@ -3,6 +3,7 @@
     "rules": {
       "no-empty-interface": false,
       "no-unused-expression": false,
-      "no-implicity-any": false
+      "no-implicity-any": false,
+      "no-console": false
     }
   }

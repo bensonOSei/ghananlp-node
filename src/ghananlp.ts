@@ -4,15 +4,15 @@ import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from
 export class GhanaNLP {
     private apiKey: string;
     private client: AxiosInstance;
-    private baseURL: string = 'https://translation-api.ghananlp.org/v1';
+    private baseURL: string = 'https://translation-api.ghananlp.org';
 
-    constructor(apiKey: string) {
+    constructor(apiKey: string, version: string = 'v1') {
         if (!apiKey) {
             throw new Error('An API key is required');
         }
         this.apiKey = apiKey;
         this.client = axios.create({
-            baseURL: this.baseURL,
+            baseURL: `${this.baseURL}/${version}`,
             headers: {
                 'Ocp-Apim-Subscription-Key': this.apiKey,
                 'Content-Type': 'application/json',
