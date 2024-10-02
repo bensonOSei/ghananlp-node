@@ -1,5 +1,5 @@
 # ghananlp-node
-Simple Typescript wrapper for the [GhanaNLP Translation API](https://ghananlp.org/). Allows you to effortlessly translate text between supported languages and retrievLla list of available language pairs.
+Simple Typescript wrapper for the [GhanaNLP Translation API](https://ghananlp.org/). Allows you to effortlessly translate text between supported languages and retrieve a list of available language pairs.
 
 ## Table of Contents
 - [Installation](#installation)
