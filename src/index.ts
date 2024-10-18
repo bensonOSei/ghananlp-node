@@ -1,1 +1,1 @@
-export { GhanaNLP } from './ghananlp'
+export { GhanaNLP } from './ghananlp';

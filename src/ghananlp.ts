@@ -1,39 +1,66 @@
 import axios, { AxiosInstance } from 'axios';
 import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from './interface'
+import { GhanaNLPEndpoints, LanguageCode } from './enums';
+import { RequestMethod } from './types';
 
 export class GhanaNLP {
     private apiKey: string;
-    private client: AxiosInstance;
     private baseURL: string = 'https://translation-api.ghananlp.org';
+    private headers: Record<string, string>;
+    private MAX_TEXT_LENGTH: number = 1000;
 
     constructor(apiKey: string, version: string = 'v1') {
         if (!apiKey) {
             throw new Error('An API key is required');
         }
         this.apiKey = apiKey;
-        this.client = axios.create({
-            baseURL: `${this.baseURL}/${version}`,
-            headers: {
-                'Ocp-Apim-Subscription-Key': this.apiKey,
-                'Content-Type': 'application/json',
-            },
+        this.headers = {
+            'Ocp-Apim-Subscription-Key': this.apiKey,
+            'Content-Type': 'application/json',
+        };
+    }
+
+    /**
+     * Make a request to the GhanaNLP API.
+     * @param {GhanaNLPEndpoints} endpoint - The endpoint to make the request to.
+     * @param method - The HTTP method to use. Defaults to GET.
+     * @param data - The data to send with the request.
+     * @returns The response from the GhanaNLP API.
+     */
+    private async request<T>(
+        endpoint: GhanaNLPEndpoints,
+        method: RequestMethod = "GET",
+        data?: any
+    ): Promise<T> {
+        const response = await axios({
+            method,
+            url: `${this.baseURL}${endpoint}`,
+            headers: this.headers,
+            data,
         });
+        return response.data as T;
     }
 
     /**
      * Translates the given input text.
-     * @param {TranslationRequest} request - Object containing the text to be translated and language pair code.
+     * @param {string} text - The text to be translated.
+     * @param {LanguageCode} from - The source language code.
+     * @param {LanguageCode} to - The target language code.
      * @returns {Promise<TranslationResponse>} The translated text.
      */
-    async translate(request: TranslationRequest): Promise<TranslationResponse> {
-        if (request.in.length > 1000) {
-            throw new Error('Input text length exceeds 1000 characters');
-        }
+    async translate(text: string, from: LanguageCode, to: LanguageCode): Promise<TranslationResponse> {
+        const request: TranslationRequest = {
+            in: text,
+            lang: `${from}-${to}`,
+        };
 
         try {
-            const response = await this.client.post<TranslationResponse>('/translate', request);
+            if (text.length > this.MAX_TEXT_LENGTH) {
+                throw new Error('Input text length exceeds 1000 characters');
+            }
+            const response = await this.request<TranslationResponse>(GhanaNLPEndpoints.TRANSLATE, 'POST', request);
 
-            return response.data;
+            return response;
         } catch (error: any) {
             this.handleError(error);
         }
@@ -45,8 +72,8 @@ export class GhanaNLP {
      */
     async getLanguages(): Promise<Language[]> {
         try {
-            const response = await this.client.get<Language[]>('/languages');
-            return response.data;
+            const response = await this.request<Language[]>(GhanaNLPEndpoints.LIST_LANGUAGES, 'GET');
+            return response;
         } catch (error: any) {
             this.handleError(error);
         }
