@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
-import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from './interface'
+import { TranslationRequest, TranslationResponse, Language, ErrorResponse, TextToSpeechRequest } from './interface'
 import { GhanaNLPEndpoints, LanguageCode } from './enums';
+import { RequestMethod } from './types';
 
 export class GhanaNLP {
     private apiKey: string;
@@ -21,7 +22,7 @@ export class GhanaNLP {
 
     private async request<T>(
         endpoint: GhanaNLPEndpoints,
-        method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+        method: RequestMethod = "GET",
         data?: any
       ): Promise<T> {
         const response = await axios<T>({
@@ -31,7 +32,7 @@ export class GhanaNLP {
           data,
         });
         return response.data as T;
-      }
+    }
     
     /**
      * Translates the given input text.
@@ -85,6 +86,32 @@ export class GhanaNLP {
         } else {
             console.error('Error:', error.message);
             throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Converts text to speech.
+     * @param {string} text - The text to be converted to speech.
+     * @param {LanguageCode} language - The language code of the text to be converted to speech.
+     * @returns {Promise<Buffer>} The audio data as a buffer.
+     */
+    async textToSpeech(text: string, language: LanguageCode): Promise<Buffer> {
+        const textToSpeechRequest: TextToSpeechRequest = {
+            text,
+            language
+        }
+
+        try {
+            const audioData = await this.request(
+                GhanaNLPEndpoints.TEXT_TO_SPEECH,
+                "POST",
+                textToSpeechRequest
+            )
+
+            return audioData as Buffer;
+            
+        } catch (error: any) {
+            this.handleError(error);
         }
     }
 }
