@@ -1,13 +1,14 @@
 import axios, { AxiosInstance } from 'axios';
 import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from './interface'
-import { GhanaNLPEndpoints } from './enums';
+import { GhanaNLPEndpoints, LanguageCode } from './enums';
 
 export class GhanaNLP {
     private apiKey: string;
     private baseURL: string = 'https://translation-api.ghananlp.org';
     private headers: Record<string, string>;
+    private MAX_TEXT_LENGTH: number = 1000;
 
-    constructor(apiKey: string, version: string = 'v1') {
+    constructor(apiKey: string) {
         if (!apiKey) {
             throw new Error('An API key is required');
         }
@@ -34,16 +35,22 @@ export class GhanaNLP {
     
     /**
      * Translates the given input text.
-     * @param {TranslationRequest} request - Object containing the text to be translated and language pair code.
+     * @param {string} text - The text to be translated.
+     * @param {LanguageCode} from - The source language code.
+     * @param {LanguageCode} to - The target language code.
      * @returns {Promise<TranslationResponse>} The translated text.
      */
-    async translate(request: TranslationRequest): Promise<TranslationResponse> {
-        if (request.in.length > 1000) {
-            throw new Error('Input text length exceeds 1000 characters');
+    async translate(text: string, from: LanguageCode, to: LanguageCode): Promise<TranslationResponse> {
+        const translationRequest: TranslationRequest = {
+            in: text,
+            lang: `${from}-${to}`
         }
 
         try {
-            const response = await this.request<TranslationResponse>(GhanaNLPEndpoints.TRANSLATE, 'POST', request);
+            if (text.length > this.MAX_TEXT_LENGTH) {
+                throw new Error('Input text length exceeds 1000 characters');
+            }
+            const response = await this.request<TranslationResponse>(GhanaNLPEndpoints.TRANSLATE, 'POST', translationRequest);
             return response;
         } catch (error: any) {
             this.handleError(error);
