@@ -11,8 +11,7 @@
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags",
-    "test": "ts-node test.ts"
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
