@@ -1,25 +1,37 @@
 import axios, { AxiosInstance } from 'axios';
 import { TranslationRequest, TranslationResponse, Language, ErrorResponse } from './interface'
+import { GhanaNLPEndpoints } from './enums';
 
 export class GhanaNLP {
     private apiKey: string;
-    private client: AxiosInstance;
     private baseURL: string = 'https://translation-api.ghananlp.org';
+    private headers: Record<string, string>;
 
     constructor(apiKey: string, version: string = 'v1') {
         if (!apiKey) {
             throw new Error('An API key is required');
         }
         this.apiKey = apiKey;
-        this.client = axios.create({
-            baseURL: `${this.baseURL}/${version}`,
-            headers: {
-                'Ocp-Apim-Subscription-Key': this.apiKey,
-                'Content-Type': 'application/json',
-            },
-        });
+        this.headers = {
+            'Ocp-Apim-Subscription-Key': this.apiKey,
+            'Content-Type': 'application/json',
+        };
     }
 
+    private async request<T>(
+        endpoint: GhanaNLPEndpoints,
+        method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+        data?: any
+      ): Promise<T> {
+        const response = await axios<T>({
+          method,
+          url: `${this.baseURL}${endpoint}`,
+          headers: this.headers,
+          data,
+        });
+        return response.data as T;
+      }
+    
     /**
      * Translates the given input text.
      * @param {TranslationRequest} request - Object containing the text to be translated and language pair code.
@@ -31,9 +43,8 @@ export class GhanaNLP {
         }
 
         try {
-            const response = await this.client.post<TranslationResponse>('/translate', request);
-
-            return response.data;
+            const response = await this.request<TranslationResponse>(GhanaNLPEndpoints.TRANSLATE, 'POST', request);
+            return response;
         } catch (error: any) {
             this.handleError(error);
         }
@@ -45,8 +56,8 @@ export class GhanaNLP {
      */
     async getLanguages(): Promise<Language[]> {
         try {
-            const response = await this.client.get<Language[]>('/languages');
-            return response.data;
+            const response = await this.request<Language[]>(GhanaNLPEndpoints.LIST_LANGUAGES, 'GET');
+            return response;
         } catch (error: any) {
             this.handleError(error);
         }
